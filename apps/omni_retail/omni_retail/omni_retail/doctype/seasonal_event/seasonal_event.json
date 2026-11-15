@@ -1,0 +1,133 @@
+{
+ "actions": [],
+ "autoname": "field:event_name",
+ "creation": "2026-11-14 00:00:00.000000",
+ "custom": 0,
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "event_name",
+  "event_type",
+  "recurring_yearly",
+  "cb1",
+  "from_date",
+  "to_date",
+  "is_active",
+  "sb1",
+  "affected_item_groups",
+  "impact_note"
+ ],
+ "fields": [
+  {
+   "fieldname": "event_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Tên sự kiện / mùa vụ",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "Sự kiện mua sắm",
+   "fieldname": "event_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Loại",
+   "options": "Mùa vụ\nLễ tết\nSự kiện mua sắm\nKhác"
+  },
+  {
+   "fieldname": "recurring_yearly",
+   "fieldtype": "Check",
+   "label": "Lặp lại hằng năm (theo ngày dương lịch)"
+  },
+  {
+   "fieldname": "cb1",
+   "fieldtype": "Column Break",
+   "label": ""
+  },
+  {
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Từ ngày",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Đến ngày",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "label": "Đang áp dụng"
+  },
+  {
+   "fieldname": "sb1",
+   "fieldtype": "Section Break",
+   "label": "Tác động dự kiến"
+  },
+  {
+   "description": "Ví dụ: Áo khoác, Áo len. Để trống nếu ảnh hưởng toàn bộ.",
+   "fieldname": "affected_item_groups",
+   "fieldtype": "Small Text",
+   "label": "Dòng sản phẩm bị ảnh hưởng"
+  },
+  {
+   "description": "AI sẽ đọc mô tả này khi dự báo.",
+   "fieldname": "impact_note",
+   "fieldtype": "Small Text",
+   "label": "Mô tả tác động đến nhu cầu"
+  }
+ ],
+ "links": [],
+ "modified": "2026-11-14 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Omni Retail",
+ "name": "Seasonal Event",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quản lý kho",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quản lý điểm bán lẻ",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "event_name"
+}

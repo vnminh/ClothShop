@@ -1,0 +1,142 @@
+name: clothshop
+
+x-app: &app
+  # Image đã đóng gói sẵn ERPNext + Webshop + omni_retail trên Docker Hub
+  image: ${IMAGE:-leevox/clothshop-omni:v15}
+  restart: unless-stopped
+  volumes:
+    - sites:/home/frappe/frappe-bench/sites
+    - logs:/home/frappe/frappe-bench/logs
+
+services:
+  db:
+    image: mariadb:10.6
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+      - --skip-innodb-read-only-compressed
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-admin}
+    healthcheck:
+      test: mysqladmin ping -h localhost --password=$${MYSQL_ROOT_PASSWORD}
+      interval: 2s
+      retries: 30
+    volumes:
+      - db-data:/var/lib/mysql
+
+  redis-cache:
+    image: redis:6.2-alpine
+    restart: unless-stopped
+
+  redis-queue:
+    image: redis:6.2-alpine
+    restart: unless-stopped
+    volumes:
+      - redis-queue-data:/data
+
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - "${MAILPIT_PORT:-8025}:8025"
+
+  configurator:
+    <<: *app
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        printf 'frappe\nerpnext\npayments\nwebshop\nomni_retail\n' > sites/apps.txt;
+        bench set-config -g db_host db;
+        bench set-config -gp db_port 3306;
+        bench set-config -g redis_cache "redis://redis-cache:6379";
+        bench set-config -g redis_queue "redis://redis-queue:6379";
+        bench set-config -g redis_socketio "redis://redis-queue:6379";
+        bench set-config -gp socketio_port 9000;
+        bench set-config -g webserver_host "http://backend";
+        bench set-config -gp webserver_port 8000;
+
+  create-site:
+    <<: *app
+    restart: "no"
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+    environment:
+      SITE_NAME: ${SITE_NAME:-clothshop.localhost}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin}
+      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-admin}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-deepseek/deepseek-chat}
+      HTTP_PORT: ${HTTP_PORT:-8080}
+      HOST_NAME: http://${SITE_NAME:-clothshop.localhost}:${HTTP_PORT:-8080}
+      SEED_DEMO: ${SEED_DEMO:-0}
+    entrypoint: ["init-site.sh"]
+
+  backend:
+    <<: *app
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+
+  frontend:
+    <<: *app
+    depends_on:
+      - backend
+      - websocket
+    command: ["nginx-entrypoint.sh"]
+    environment:
+      BACKEND: backend:8000
+      SOCKETIO: websocket:9000
+      FRAPPE_SITE_NAME_HEADER: ${SITE_NAME:-clothshop.localhost}
+      UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
+      UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
+      UPSTREAM_REAL_IP_RECURSIVE: "off"
+      PROXY_READ_TIMEOUT: 120
+      CLIENT_MAX_BODY_SIZE: 50m
+    ports:
+      - "${HTTP_PORT:-8080}:8080"
+    networks:
+      default:
+        # các container khác (wkhtmltopdf khi tạo PDF) truy cập site qua đúng URL công khai
+        aliases:
+          - ${SITE_NAME:-clothshop.localhost}
+
+  websocket:
+    <<: *app
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+    command: ["node", "/home/frappe/frappe-bench/apps/frappe/socketio.js"]
+
+  queue-short:
+    <<: *app
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+    command: ["bench", "worker", "--queue", "short,default"]
+
+  queue-long:
+    <<: *app
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+    command: ["bench", "worker", "--queue", "long,default,short"]
+
+  scheduler:
+    <<: *app
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+    command: ["bench", "schedule"]
+
+volumes:
+  db-data:
+  redis-queue-data:
+  sites:
+  logs:

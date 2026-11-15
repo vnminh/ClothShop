@@ -1,0 +1,129 @@
+{
+ "actions": [],
+ "autoname": "field:store_name",
+ "creation": "2026-11-14 00:00:00.000000",
+ "custom": 0,
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "store_name",
+  "warehouse",
+  "pos_profile",
+  "manager",
+  "cb1",
+  "is_active",
+  "allow_pickup",
+  "phone",
+  "address"
+ ],
+ "fields": [
+  {
+   "fieldname": "store_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Tên điểm bán",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Kho của điểm bán",
+   "options": "Warehouse",
+   "reqd": 1
+  },
+  {
+   "fieldname": "pos_profile",
+   "fieldtype": "Link",
+   "label": "POS Profile",
+   "options": "POS Profile"
+  },
+  {
+   "fieldname": "manager",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Quản lý điểm bán",
+   "options": "User"
+  },
+  {
+   "fieldname": "cb1",
+   "fieldtype": "Column Break",
+   "label": ""
+  },
+  {
+   "default": "1",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Đang hoạt động"
+  },
+  {
+   "default": "1",
+   "fieldname": "allow_pickup",
+   "fieldtype": "Check",
+   "label": "Cho phép khách nhận hàng tại đây"
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "Điện thoại"
+  },
+  {
+   "fieldname": "address",
+   "fieldtype": "Small Text",
+   "label": "Địa chỉ"
+  }
+ ],
+ "links": [],
+ "modified": "2026-11-14 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Omni Retail",
+ "name": "Retail Store",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quản lý điểm bán lẻ",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quản lý kho"
+  },
+  {
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Nhân viên bán hàng"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "store_name",
+ "track_changes": 1
+}

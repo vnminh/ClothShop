@@ -1,0 +1,211 @@
+{
+ "actions": [],
+ "creation": "2026-11-14 00:00:00.000000",
+ "custom": 0,
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "sb_order",
+  "central_warehouse",
+  "pickup_expiry_days",
+  "return_window_days",
+  "cb_o",
+  "cod_mode_of_payment",
+  "transfer_mode_of_payment",
+  "bank_transfer_info",
+  "sb_ai",
+  "ai_enabled",
+  "openrouter_api_key",
+  "ai_model",
+  "ai_base_url",
+  "cb_ai",
+  "schedule",
+  "min_ai_factor",
+  "max_ai_factor",
+  "sb_plan",
+  "history_weeks",
+  "cover_days",
+  "safety_days",
+  "cb_p",
+  "default_lead_time_days",
+  "default_supplier"
+ ],
+ "fields": [
+  {
+   "fieldname": "sb_order",
+   "fieldtype": "Section Break",
+   "label": "Đơn hàng online"
+  },
+  {
+   "fieldname": "central_warehouse",
+   "fieldtype": "Link",
+   "label": "Kho trung tâm (xuất đơn giao tại nhà)",
+   "options": "Warehouse"
+  },
+  {
+   "default": "5",
+   "fieldname": "pickup_expiry_days",
+   "fieldtype": "Int",
+   "label": "Số ngày giữ hàng cho đơn nhận tại điểm bán"
+  },
+  {
+   "default": "7",
+   "fieldname": "return_window_days",
+   "fieldtype": "Int",
+   "label": "Số ngày cho phép trả hàng"
+  },
+  {
+   "fieldname": "cb_o",
+   "fieldtype": "Column Break",
+   "label": ""
+  },
+  {
+   "fieldname": "cod_mode_of_payment",
+   "fieldtype": "Link",
+   "label": "Hình thức thanh toán COD / tại quầy",
+   "options": "Mode of Payment"
+  },
+  {
+   "fieldname": "transfer_mode_of_payment",
+   "fieldtype": "Link",
+   "label": "Hình thức thanh toán chuyển khoản",
+   "options": "Mode of Payment"
+  },
+  {
+   "fieldname": "bank_transfer_info",
+   "fieldtype": "Small Text",
+   "label": "Thông tin chuyển khoản hiển thị cho khách"
+  },
+  {
+   "fieldname": "sb_ai",
+   "fieldtype": "Section Break",
+   "label": "AI dự báo nhu cầu (OpenRouter / DeepSeek)"
+  },
+  {
+   "default": "1",
+   "fieldname": "ai_enabled",
+   "fieldtype": "Check",
+   "label": "Dùng AI để điều chỉnh dự báo"
+  },
+  {
+   "description": "Để trống sẽ dùng giá trị openrouter_api_key trong site_config (biến môi trường OPENROUTER_API_KEY).",
+   "fieldname": "openrouter_api_key",
+   "fieldtype": "Password",
+   "label": "OpenRouter API Key"
+  },
+  {
+   "default": "deepseek/deepseek-chat",
+   "fieldname": "ai_model",
+   "fieldtype": "Data",
+   "label": "Model"
+  },
+  {
+   "default": "https://openrouter.ai/api/v1",
+   "fieldname": "ai_base_url",
+   "fieldtype": "Data",
+   "label": "API base URL"
+  },
+  {
+   "fieldname": "cb_ai",
+   "fieldtype": "Column Break",
+   "label": ""
+  },
+  {
+   "default": "Hằng tuần (thứ Hai)",
+   "fieldname": "schedule",
+   "fieldtype": "Select",
+   "label": "Lịch chạy tự động",
+   "options": "Hằng tuần (thứ Hai)\nHằng ngày\nTắt"
+  },
+  {
+   "default": "0.3",
+   "fieldname": "min_ai_factor",
+   "fieldtype": "Float",
+   "label": "Hệ số AI tối thiểu"
+  },
+  {
+   "default": "3",
+   "fieldname": "max_ai_factor",
+   "fieldtype": "Float",
+   "label": "Hệ số AI tối đa"
+  },
+  {
+   "fieldname": "sb_plan",
+   "fieldtype": "Section Break",
+   "label": "Tham số lập kế hoạch mua hàng"
+  },
+  {
+   "default": "78",
+   "fieldname": "history_weeks",
+   "fieldtype": "Int",
+   "label": "Số tuần lịch sử dùng để phân tích"
+  },
+  {
+   "default": "30",
+   "description": "Lượng hàng đặt đủ bán trong bao nhiêu ngày sau khi hàng về.",
+   "fieldname": "cover_days",
+   "fieldtype": "Int",
+   "label": "Kỳ phủ hàng (ngày)"
+  },
+  {
+   "default": "7",
+   "fieldname": "safety_days",
+   "fieldtype": "Int",
+   "label": "Tồn an toàn (ngày bán)"
+  },
+  {
+   "fieldname": "cb_p",
+   "fieldtype": "Column Break",
+   "label": ""
+  },
+  {
+   "default": "7",
+   "fieldname": "default_lead_time_days",
+   "fieldtype": "Int",
+   "label": "Thời gian giao hàng mặc định của NCC (ngày)"
+  },
+  {
+   "fieldname": "default_supplier",
+   "fieldtype": "Link",
+   "label": "Nhà cung cấp mặc định",
+   "options": "Supplier"
+  }
+ ],
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-11-14 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Omni Retail",
+ "name": "Omni Retail Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Quản lý kho",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Quản lý điểm bán lẻ"
+  },
+  {
+   "read": 1,
+   "role": "Nhân viên bán hàng"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

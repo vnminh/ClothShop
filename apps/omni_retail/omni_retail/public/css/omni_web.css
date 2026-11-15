@@ -1,0 +1,25 @@
+/* omni_retail: checkout mở rộng + theo dõi đơn trên Webshop */
+#pay-for-order { display: none !important; }
+
+.omni-checkout { border-top: 1px solid var(--border-color, #e2e6e9); margin-top: 1rem; padding-top: 1rem; font-size: 14px; }
+.omni-checkout h6 { font-weight: 600; margin: .75rem 0 .5rem; }
+.omni-checkout label { display: flex; gap: .5rem; align-items: flex-start; margin-bottom: .4rem; cursor: pointer; font-weight: 400; }
+.omni-checkout label input { margin-top: .25rem; }
+.omni-checkout select { width: 100%; margin: .25rem 0 .5rem; }
+.omni-checkout .omni-note { background: var(--bg-light-gray, #f4f5f6); border-radius: 6px; padding: .5rem .75rem; font-size: 13px; margin-bottom: .75rem; }
+.omni-checkout .omni-warn { color: #b54708; font-size: 13px; margin-bottom: .5rem; }
+
+.omni-track { border: 1px solid var(--border-color, #e2e6e9); border-radius: 8px; padding: 1rem 1.25rem; margin: 1rem 0 1.5rem; background: var(--fg-color, #fff); }
+.omni-track-head { display: flex; flex-wrap: wrap; gap: .75rem; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.omni-track-status { font-size: 18px; font-weight: 700; }
+.omni-track-status.is-bad { color: #c0392b; }
+.omni-steps { display: flex; gap: 6px; margin-bottom: 1rem; }
+.omni-step { flex: 1; text-align: center; font-size: 12px; color: var(--text-muted, #6c7680); }
+.omni-step::before { content: ""; display: block; height: 6px; border-radius: 3px; background: #d5d9dd; margin-bottom: 6px; }
+.omni-step.done { color: inherit; font-weight: 600; }
+.omni-step.done::before { background: #2e9e5b; }
+.omni-track ul { list-style: none; padding: 0; margin: 0; font-size: 13px; }
+.omni-track li { padding: .3rem 0; border-top: 1px dashed var(--border-color, #e2e6e9); display: flex; gap: .75rem; flex-wrap: wrap; }
+.omni-track li time { color: var(--text-muted, #6c7680); min-width: 9.5rem; }
+.omni-track-meta { font-size: 13px; color: var(--text-muted, #6c7680); margin-bottom: .75rem; }
+@media (max-width: 576px) { .omni-step { font-size: 10px; } }

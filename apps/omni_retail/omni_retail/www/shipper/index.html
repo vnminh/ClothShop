@@ -1,0 +1,124 @@
+{% extends "templates/web.html" %}
+{% block title %}Giao hàng{% endblock %}
+
+{% block style %}
+<style>
+	.sp-wrap { max-width: 640px; margin: 0 auto; padding-bottom: 3rem; }
+	.sp-head { display: flex; justify-content: space-between; align-items: center; margin: .5rem 0 1rem; }
+	.sp-head h3 { margin: 0; font-size: 20px; }
+	.sp-tabs { display: flex; gap: 6px; margin-bottom: 1rem; }
+	.sp-tab { flex: 1; padding: .6rem .25rem; border: 1px solid var(--border-color, #d9dde1); background: transparent; border-radius: 8px; font-size: 14px; }
+	.sp-tab.active { background: var(--primary, #2490ef); border-color: var(--primary, #2490ef); color: #fff; font-weight: 600; }
+	.sp-card { border: 1px solid var(--border-color, #d9dde1); border-radius: 10px; padding: .9rem 1rem; margin-bottom: .75rem; background: var(--fg-color, #fff); }
+	.sp-row { display: flex; justify-content: space-between; gap: .75rem; align-items: baseline; }
+	.sp-name { font-weight: 700; }
+	.sp-muted { color: var(--text-muted, #6c7680); font-size: 13px; }
+	.sp-addr { margin: .35rem 0; font-size: 14px; overflow-wrap: anywhere; }
+	.sp-items { font-size: 13px; margin: .35rem 0 .6rem; padding-left: 1.1rem; }
+	.sp-cod { font-size: 16px; font-weight: 700; }
+	.sp-actions { display: flex; gap: 8px; margin-top: .6rem; }
+	.sp-actions .btn { flex: 1; padding: .6rem; font-size: 15px; }
+	.sp-empty { text-align: center; color: var(--text-muted, #6c7680); padding: 2.5rem 0; }
+	.sp-pill { font-size: 12px; padding: 2px 8px; border-radius: 10px; background: #e8f5ee; color: #1d7a45; }
+	.sp-pill.bad { background: #fdecea; color: #b42318; }
+</style>
+{% endblock %}
+
+{% block page_content %}
+<div class="sp-wrap">
+	<div class="sp-head">
+		<h3>Xin chào, {{ shipper_name }}</h3>
+		<button class="btn btn-sm btn-default" id="sp-refresh">Làm mới</button>
+	</div>
+	<div class="sp-tabs">
+		<button class="sp-tab active" data-tab="available">Chờ nhận <span data-count="available"></span></button>
+		<button class="sp-tab" data-tab="mine">Đang giao <span data-count="mine"></span></button>
+		<button class="sp-tab" data-tab="history">Lịch sử</button>
+	</div>
+	<div id="sp-list"><div class="sp-empty">Đang tải...</div></div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+frappe.ready(function () {
+	let board = { available: [], mine: [], history: [] };
+	let tab = "available";
+	const esc = (s) => $("<div>").text(s == null ? "" : s).html();
+	const money = (v) => new Intl.NumberFormat("vi-VN").format(Math.round(v || 0)) + " đ";
+
+	function card(o) {
+		const items = o.items.map((i) => `<li>${esc(i.item_name)} × ${i.qty}</li>`).join("");
+		const cod = o.collect_amount > 0
+			? `<span class="sp-cod">Thu hộ: ${money(o.collect_amount)}</span>`
+			: `<span class="sp-pill">Đã thanh toán – không thu tiền</span>`;
+		let actions = "";
+		if (tab === "available") {
+			actions = `<button class="btn btn-primary" data-act="pickup" data-name="${esc(o.name)}">Nhận đơn đi giao</button>`;
+		} else if (tab === "mine") {
+			actions = `<button class="btn btn-default" data-act="failed" data-name="${esc(o.name)}">Giao thất bại</button>
+				<button class="btn btn-primary" data-act="delivered" data-name="${esc(o.name)}" data-collect="${o.collect_amount}">Đã giao${o.collect_amount > 0 ? " & thu tiền" : ""}</button>`;
+		}
+		const pill = tab === "history" ? `<span class="sp-pill ${o.status === "Thành công" ? "" : "bad"}">${esc(o.status)}</span>` : "";
+		return `<div class="sp-card">
+			<div class="sp-row"><span class="sp-name">${esc(o.customer_name)}</span><span class="sp-muted">${esc(o.name)}</span></div>
+			${o.phone ? `<div><a href="tel:${esc(o.phone)}">${esc(o.phone)}</a></div>` : ""}
+			<div class="sp-addr">${esc(o.address) || '<span class="sp-muted">Chưa có địa chỉ</span>'}</div>
+			<ul class="sp-items">${items}</ul>
+			<div class="sp-row">${cod}${pill}${o.attempts > 0 && tab !== "history" ? `<span class="sp-muted">Lần giao thứ ${o.attempts + (tab === "available" ? 1 : 0)}</span>` : ""}</div>
+			${actions ? `<div class="sp-actions">${actions}</div>` : ""}
+		</div>`;
+	}
+
+	function render() {
+		$(".sp-tab").removeClass("active").filter(`[data-tab=${tab}]`).addClass("active");
+		$("[data-count=available]").text(board.available.length ? `(${board.available.length})` : "");
+		$("[data-count=mine]").text(board.mine.length ? `(${board.mine.length})` : "");
+		const rows = board[tab] || [];
+		const empty = { available: "Chưa có đơn nào chờ giao.", mine: "Bạn chưa nhận đơn nào.", history: "Chưa có lịch sử giao hàng." }[tab];
+		$("#sp-list").html(rows.length ? rows.map(card).join("") : `<div class="sp-empty">${empty}</div>`);
+	}
+
+	function load() {
+		return frappe.call("omni_retail.orders.api.shipper_board").then((r) => {
+			board = r.message;
+			render();
+		});
+	}
+
+	function act(name, action, note) {
+		frappe.call({
+			method: "omni_retail.orders.api.shipper_action",
+			args: { sales_order: name, action, note },
+			freeze: true,
+			freeze_message: "Đang cập nhật...",
+		}).then(() => {
+			if (action === "pickup") tab = "mine";
+			load();
+		});
+	}
+
+	$(".sp-tab").on("click", function () { tab = $(this).data("tab"); render(); });
+	$("#sp-refresh").on("click", load);
+	$("#sp-list").on("click", "[data-act]", function () {
+		const name = $(this).data("name");
+		const action = $(this).data("act");
+		if (action === "failed") {
+			frappe.prompt(
+				[{ fieldname: "note", fieldtype: "Small Text", label: "Lý do giao thất bại", reqd: 1 }],
+				(v) => act(name, action, v.note), "Giao thất bại", "Xác nhận"
+			);
+		} else if (action === "delivered") {
+			const collect = parseFloat($(this).data("collect")) || 0;
+			const msg = collect > 0 ? `Xác nhận đã giao hàng và thu đủ ${money(collect)}?` : "Xác nhận đã giao hàng cho khách?";
+			frappe.confirm(msg, () => act(name, action));
+		} else {
+			act(name, action);
+		}
+	});
+
+	load();
+	setInterval(load, 60000);
+});
+</script>
+{% endblock %}

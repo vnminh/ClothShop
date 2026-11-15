@@ -1,0 +1,229 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-11-14 00:00:00.000000",
+ "custom": 0,
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "title",
+  "status",
+  "company",
+  "cb1",
+  "run_date",
+  "forecast_from",
+  "forecast_to",
+  "horizon_days",
+  "cb2",
+  "ai_used",
+  "ai_model",
+  "total_amount",
+  "triggered_by",
+  "sb_ai",
+  "ai_summary",
+  "events_considered",
+  "ai_error",
+  "sb_items",
+  "items",
+  "sb_po",
+  "purchase_orders",
+  "approved_by",
+  "approved_on"
+ ],
+ "fields": [
+  {
+   "default": "KHMH-.YYYY.-.#####",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Series",
+   "options": "KHMH-.YYYY.-.#####"
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Tiêu đề"
+  },
+  {
+   "default": "Đang chạy",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Trạng thái",
+   "options": "Đang chạy\nChờ duyệt\nĐã tạo PO\nĐã gửi NCC\nTừ chối\nLỗi",
+   "read_only": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Công ty",
+   "options": "Company"
+  },
+  {
+   "fieldname": "cb1",
+   "fieldtype": "Column Break",
+   "label": ""
+  },
+  {
+   "fieldname": "run_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Ngày chạy",
+   "read_only": 1
+  },
+  {
+   "fieldname": "forecast_from",
+   "fieldtype": "Date",
+   "label": "Dự báo từ ngày",
+   "read_only": 1
+  },
+  {
+   "fieldname": "forecast_to",
+   "fieldtype": "Date",
+   "label": "Dự báo đến ngày",
+   "read_only": 1
+  },
+  {
+   "fieldname": "horizon_days",
+   "fieldtype": "Int",
+   "label": "Số ngày dự báo",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cb2",
+   "fieldtype": "Column Break",
+   "label": ""
+  },
+  {
+   "fieldname": "ai_used",
+   "fieldtype": "Check",
+   "label": "Đã dùng AI",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ai_model",
+   "fieldtype": "Data",
+   "label": "Model AI",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Tổng giá trị đề xuất",
+   "read_only": 1
+  },
+  {
+   "fieldname": "triggered_by",
+   "fieldtype": "Data",
+   "label": "Người/nguồn kích hoạt",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sb_ai",
+   "fieldtype": "Section Break",
+   "label": "Phân tích của AI"
+  },
+  {
+   "fieldname": "ai_summary",
+   "fieldtype": "Text",
+   "label": "Nhận định tổng quan",
+   "read_only": 1
+  },
+  {
+   "fieldname": "events_considered",
+   "fieldtype": "Small Text",
+   "label": "Yếu tố ngoại cảnh đã xét",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ai_error",
+   "fieldtype": "Small Text",
+   "label": "Ghi chú kỹ thuật",
+   "read_only": 1
+  },
+  {
+   "fieldname": "sb_items",
+   "fieldtype": "Section Break",
+   "label": "Đề xuất mua hàng"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Chi tiết",
+   "options": "Purchase Plan Item"
+  },
+  {
+   "fieldname": "sb_po",
+   "fieldtype": "Section Break",
+   "label": "Đơn mua hàng đã tạo"
+  },
+  {
+   "fieldname": "purchase_orders",
+   "fieldtype": "Small Text",
+   "label": "Purchase Order",
+   "read_only": 1
+  },
+  {
+   "fieldname": "approved_by",
+   "fieldtype": "Link",
+   "label": "Người duyệt",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "approved_on",
+   "fieldtype": "Datetime",
+   "label": "Thời điểm duyệt",
+   "read_only": 1
+  }
+ ],
+ "links": [],
+ "modified": "2026-11-14 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Omni Retail",
+ "name": "Purchase Plan",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quản lý kho",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quản lý điểm bán lẻ"
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "title",
+ "track_changes": 1
+}
